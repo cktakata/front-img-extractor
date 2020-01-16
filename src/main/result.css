@@ -1,0 +1,4 @@
+.result-flex-table {
+  display: flex;
+  flex-wrap: wrap;
+}
