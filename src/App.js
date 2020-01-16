@@ -1,7 +1,6 @@
 import React from 'react';
 import './App.css';
 import Search from './main/search';
-import Result from './main/result';
 
 function App() {
   return (
@@ -15,7 +14,7 @@ function App() {
 
       <Search />
       <br />
-      <Result />
+
     </div>
   );
 }

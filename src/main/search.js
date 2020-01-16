@@ -1,31 +1,36 @@
 import React from 'react';
 import './search.css';
-import axios from 'axios';
+import io from 'socket.io-client';
 
 class Search extends React.Component {
+    state = {
+        url: 'http://www.google.com',
+        filename: []
+    };
 
     constructor(props) {
         super(props);
-        this.state = {
-            url: 'https://www.google.com'
-        };
         this.myChangeHandler = this.myChangeHandler.bind(this);
+
+        this.socket = io.connect("http://localhost:8080");
+
+        this.init();
     }
 
-    async shoot() {
+    init() {
+        this.socket.on('msgToClient', function (message) {
+            for (const img of message.data) {
+                this.setState({ filename: [...this.state.filename, img] });
+            }
+        }.bind(this));
+    }
+
+    shoot() {
         try {
-            const response = await axios.post(
-                'http://localhost:8080/image/data/scrap',
-                { url: this.state.url },
-                {
-                    headers: {
-                        "Content-Type": "application/json; charset=utf-8"
-                    }
-                }
-            )
-            console.log(response.data)
+            const message = { "url": this.state.url };
+            this.socket.emit('msgToServer', message);
         } catch (e) {
-            alert(e)
+            console.log(e)
         }
     }
 
@@ -45,6 +50,13 @@ class Search extends React.Component {
                     <div>&nbsp;</div>
                     <div><button onClick={this.shoot.bind(this)}>{this.state.url}</button></div>
                     <br />
+                </div>
+                <div>
+                    <p>Imagens capturadas</p>
+                    <ul>
+                        {this.state.filename.map(file => <li>{file.filename}</li>)}
+                        {this.state.filename.map(file => <img src={`data:image/png;base64,${file.thumb}`} alt="" />)}
+                    </ul>
                 </div>
             </form>
         );
