@@ -48,15 +48,20 @@ class Search extends React.Component {
                     <div>&nbsp;</div>
                     <div><input type='text' size='100' maxLength='256' name='url' value={this.state.url} onChange={this.myChangeHandler} /></div>
                     <div>&nbsp;</div>
-                    <div><button onClick={this.shoot.bind(this)}>{this.state.url}</button></div>
+                    <div><button onClick={this.shoot.bind(this)}>Go!</button></div>
                     <br />
                 </div>
                 <div>
                     <p>Imagens capturadas</p>
-                    <ul>
-                        {this.state.filename.map(file => <li>{file.filename}</li>)}
-                        {this.state.filename.map(file => <img src={`data:image/png;base64,${file.thumb}`} alt="" />)}
-                    </ul>
+                    <div className='search-flex-table-result'>
+                        <div>
+                            {this.state.filename.map(file =>
+                                <div>
+                                    <img src={`data:image/png;base64,${file.thumb}`} alt={`${file.filename}`} />
+                                    <p>{file.filename}</p>
+                                </div>)}
+                        </div>
+                    </div>
                 </div>
             </form>
         );
